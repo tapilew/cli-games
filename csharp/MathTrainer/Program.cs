@@ -1,19 +1,19 @@
 ﻿// todo - [x] select quantity of digits for each operand
 // todo - [x] track time taken to complete each operation and total time
-// todo - [ ] improve precision in time tracking
-// todo - [ ] select quantity of operands
+// todo - [x] select quantity of operands
 // todo - [ ] select custom ranges (either quantity or digits)
+// todo - [ ] improve precision in time tracking
 // todo - [ ] set some defaults
 // todo - [ ] format operations
 // todo - [ ] do unit tests
 
 using System.Diagnostics;
-System.Random random = new System.Random();
+using System.Text;
 
+System.Random random = new System.Random();
 int correctAnswers = 0;
 int operations = 0;
-int digitsFirst = 0;
-int digitsSecond = 0;
+int operands = 0;
 int totalSeconds = 0;
 int totalMinutes = 0;
 
@@ -21,6 +21,7 @@ Console.WriteLine("Operation options:\n" +
     "'addition' (+)\n'subtraction' (-)\n" +
     "'multiplication' (*)\n'division' (/)\n");
 Console.Write("Select your operation type: ");
+
 var op = Console.ReadLine();
 
 if (op == "addition" || op == "add" || op == "+")
@@ -45,12 +46,20 @@ else
 }
 
 Console.WriteLine($"Great! Let's do {op}\n");
-Console.Write("Select the amount of DIGITS the FIRST operand should have: ");
-digitsFirst = System.Convert.ToInt32(Console.ReadLine());
-Console.Write("Select the amount of DIGITS the SECOND operand should have: ");
-digitsSecond = System.Convert.ToInt32(Console.ReadLine());
-Console.Write("Select the number of operations to perform: ");
-operations = System.Convert.ToInt32(Console.ReadLine());
+Console.Write("Select the amount of OPERANDS of each operation: ");
+
+operands = Convert.ToInt32(Console.ReadLine());
+int[] digitsPerOperand = new int[operands];
+
+for (int i = 0; i < operands; i++)
+{
+    int operandNumber = i + 1;
+    Console.Write($"How many DIGITS should operand {operandNumber} have: ");
+    digitsPerOperand[i] = Convert.ToInt32(Console.ReadLine());
+}
+
+Console.Write("\nSelect the number of operations to perform: ");
+operations = Convert.ToInt32(Console.ReadLine());
 Console.WriteLine();
 
 Stopwatch stopwatch = new Stopwatch();
@@ -58,38 +67,46 @@ stopwatch.Start();
 
 for (int i = 0; i < operations; i++)
 {
-    int minNumFirst = System.Convert.ToInt32("1" + new string('0', digitsFirst - 1));
-    int maxNumFirst = System.Convert.ToInt32("1" + new string('0', digitsFirst)) - 1;
-    int minNumSecond = System.Convert.ToInt32("1" + new string('0', digitsSecond - 1));
-    int maxNumSecond = System.Convert.ToInt32("1" + new string('0', digitsSecond)) - 1;
-    int operand1 = random.Next(minNumFirst, maxNumFirst);
-    int operand2 = random.Next(minNumSecond, maxNumSecond);
-    int result = 0;
-    char opSymbol = ' ';
-    switch (op)
+    int[] operandValues = new int[operands];
+    for (int j = 0; j < operands; j++)
     {
-        case "addition":
-            result = operand1 + operand2;
-            opSymbol = '+';
-            break;
-        case "subtraction":
-            result = operand1 - operand2;
-            opSymbol = '-';
-            break;
-        case "multiplication":
-            result = operand1 * operand2;
-            opSymbol = '*';
-            break;
-        case "division":
-            result = operand1 / operand2;
-            opSymbol = '/';
-            break;
+        int min = Convert.ToInt32("1" + new string('0', digitsPerOperand[j] - 1));
+        int max = Convert.ToInt32("1" + new string('0', digitsPerOperand[j])) - 1;
+        int value = random.Next(min, max);
+        operandValues[j] = value;
+    }
+    char opSymbol = ' ';
+    int result = operandValues[0];
+    StringBuilder sb = new StringBuilder();
+    sb.Append(operandValues[0]);
+    for (int j = 1; j < operands; j++)
+    {
+        switch (op)
+        {
+            case "addition":
+                opSymbol = '+';
+                result += operandValues[j];
+                break;
+            case "subtraction":
+                opSymbol = '-';
+                result -= operandValues[j];
+                break;
+            case "multiplication":
+                opSymbol = '*';
+                result *= operandValues[j];
+                break;
+            case "division":
+                opSymbol = '/';
+                result /= operandValues[j];
+                break;
+        }
+        sb.Append($" {opSymbol} {operandValues[j]}");
     }
 
-    Console.Write($"{operand1} {opSymbol} {operand2} = ");
+    Console.Write($"{sb.ToString()} = "); // to change
     Stopwatch stopwatchOp = new Stopwatch();
     stopwatchOp.Start();
-    int userAnswer = System.Convert.ToInt32((Console.ReadLine()));
+    int userAnswer = Convert.ToInt32((Console.ReadLine()));
     stopwatchOp.Stop();
     int opSeconds = stopwatchOp.Elapsed.Seconds;
     int opMinutes = stopwatchOp.Elapsed.Minutes;
