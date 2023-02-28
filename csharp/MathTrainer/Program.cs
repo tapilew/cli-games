@@ -1,13 +1,17 @@
-﻿// TODO - [ ] new option to add binary
+﻿// TODO - [x] new option to add binary
 // TODO - [ ] new option to subtract binary
 // TODO - [ ] determine value of binary with 1 in each place
 // TODO - [ ] determine how many 1s would be enough to represent n number
+
+// TODO - [ ] do octal conversions/operations
+// TODO - [ ] do hexadecimal conversions/operations
 
 // TODO - [ ] select custom ranges (either quantity or digits)
 // TODO - [ ] improve precision in time tracking
 // TODO - [ ] set some defaults
 // TODO - [ ] format operations
 // TODO - [ ] do unit tests
+// TODO - [ ] handle exceptions
 
 using System.Diagnostics;
 using System.Text;
@@ -90,7 +94,7 @@ static string WelcomeMessage(string state)
                 "Select your operation type: ";
         case "binary":
             return "\n1) decimal to binary\n2) binary to decimal\n" +
-                "Choose: ";
+                "3) binary addition\nChoose: ";
         default:
             return "nope...";
     }
@@ -185,6 +189,49 @@ static int GetMaximumNumberWithNDigits(int digits)
     return Convert.ToInt32("1" + new string('0', digits)) - 1;
 }
 
+static int BinaryToDecimal(int binaryValue)
+{
+    string binaryText = Convert.ToString(binaryValue);
+    char[] reversedBinary = binaryText.Reverse().ToArray();
+    int result = 0;
+    for (int i = 0; i < reversedBinary.Length; i++)
+    {
+        int digit = Convert.ToInt32(Convert.ToString(reversedBinary[i]));
+        if (digit == 1)
+        {
+            result += Convert.ToInt32(Math.Pow(2.0, Convert.ToDouble(i)));
+        }
+    }
+    return result;
+}
+
+static int AddBinaries(int[] binaryOperands)
+{
+    int[] decimalOperands = new int[binaryOperands.Length];
+    for (int i = 0; i < binaryOperands.Length; i++)
+    {
+        decimalOperands[i] = BinaryToDecimal(binaryOperands[i]);
+    }
+    int decimalResult = SolveOperation("addition", decimalOperands);
+    int binaryResult = DecimalToBinary(decimalResult);
+    return binaryResult;
+}
+
+static int GetRandomBinaryWithNDigits(int digits)
+{
+    Random rnd = new Random();
+    int[] powers = new int[digits];
+    for (int i = 0; i < powers.Length; i++)
+    {
+        powers[i] = Convert.ToInt32(Math.Pow(2, Convert.ToDouble(i)));
+    }
+    int minimumDecimal = powers[powers.Length - 1];
+    int maximumDecimal = SolveOperation("addition", powers);
+    int decimalValue = rnd.Next(minimumDecimal, maximumDecimal);
+    int binaryValue = DecimalToBinary(decimalValue);
+    return binaryValue;
+}
+
 var mode = PromptForString(WelcomeMessage("home"));
 
 if (mode == "1" || mode == "arithmetic")
@@ -201,7 +248,7 @@ if (mode == "1" || mode == "arithmetic")
         digitsPerOperand[i] = PromptForNumber(
             $"How many DIGITS should operand {operandNumber} have: ");
     }
-    int operations = PromptForNumber("\n Select the number of operations to perform: ");
+    int operations = PromptForNumber("\nSelect the number of operations to perform: ");
     Console.WriteLine();
     Stopwatch stopwatch = new Stopwatch();
     stopwatch.Start();
@@ -238,71 +285,121 @@ if (mode == "1" || mode == "arithmetic")
 else if (mode == "2" || mode == "binary")
 {
     var binaryMode = PromptForString(WelcomeMessage("binary"));
-    int minimum = PromptForNumber(
-        "Write a range of numbers to convert from or to\n" +
-        "Minimum: ");
-    int maximum = PromptForNumber("Maximum: ");
-    int conversions = PromptForNumber("How many times you want to convert?: ");
-    Console.WriteLine();
-    int[] decimals = new int[conversions];
-    int[] binaries = new int[conversions];
-    for (int i = 0; i < conversions; i++)
+
+    if (binaryMode == "1" || binaryMode == "decimal to binary" || binaryMode == "2" || binaryMode == "binary to decimal")
     {
-        int decimalValue = random.Next(minimum, maximum + 1);
-        decimals[i] = decimalValue;
-        binaries[i] = DecimalToBinary(decimalValue);
-    }
-    if (binaryMode == "1" || binaryMode == "decimal to binary")
-    {
-        int correctAnswers = 0;
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
+        int minimum = PromptForNumber(
+            "Write a range of numbers to convert from or to\n" +
+            "Minimum: ");
+        int maximum = PromptForNumber("Maximum: ");
+        int conversions = PromptForNumber("How many times you want to convert?: ");
+        Console.WriteLine();
+        int[] decimals = new int[conversions];
+        int[] binaries = new int[conversions];
+
         for (int i = 0; i < conversions; i++)
         {
-            int decimalValue = decimals[i];
-            int binaryValue = binaries[i];
+            int decimalValue = random.Next(minimum, maximum + 1);
+            decimals[i] = decimalValue;
+            binaries[i] = DecimalToBinary(decimalValue);
+        }
+
+        if (binaryMode == "1" || binaryMode == "decimal to binary")
+        {
+            int correctAnswers = 0;
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            for (int i = 0; i < conversions; i++)
+            {
+                int decimalValue = decimals[i];
+                int binaryValue = binaries[i];
+                Stopwatch stopwatchOp = new Stopwatch();
+                stopwatchOp.Start();
+                int userAnswer = PromptForNumber($"Convert {decimalValue} to binary: ");
+                stopwatchOp.Stop();
+                if (userAnswer == binaryValue) correctAnswers++;
+                Console.WriteLine(ReportQuestionResult(
+                    userAnswer,
+                    binaryValue,
+                    stopwatchOp.Elapsed.Seconds,
+                    stopwatchOp.Elapsed.Minutes));
+            }
+            stopwatch.Stop();
+            Console.WriteLine(ReportTotalScore(
+                correctAnswers,
+                conversions,
+                stopwatch.Elapsed.Seconds,
+                stopwatch.Elapsed.Minutes));
+        }
+        else if (binaryMode == "2" || binaryMode == "binary to decimal")
+        {
+            int correctAnswers = 0;
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            for (int i = 0; i < conversions; i++)
+            {
+                int decimalValue = decimals[i];
+                int binaryValue = binaries[i];
+                Stopwatch stopwatchOp = new Stopwatch();
+                stopwatchOp.Start();
+                int userAnswer = PromptForNumber($"Convert {binaryValue} to decimal: ");
+                stopwatchOp.Stop();
+                if (userAnswer == decimalValue) correctAnswers++;
+                Console.WriteLine(ReportQuestionResult(
+                    userAnswer,
+                    decimalValue,
+                    stopwatchOp.Elapsed.Seconds,
+                    stopwatchOp.Elapsed.Minutes));
+            }
+            stopwatch.Stop();
+            Console.WriteLine(ReportTotalScore(
+                correctAnswers,
+                conversions,
+                stopwatch.Elapsed.Seconds,
+                stopwatch.Elapsed.Minutes));
+        }
+    }
+    else if (binaryMode == "3" || binaryMode == "binary addition" || binaryMode == "add")
+    {
+        int correctAnswers = 0;
+        int operands = PromptForNumber($"\nGreat! Let's do binary addition\n" +
+            "Select the amount of OPERANDS of each addition: ");
+        int[] digitsPerOperand = new int[operands];
+        for (int i = 0; i < operands; i++)
+        {
+            int operandNumber = i + 1;
+            digitsPerOperand[i] = PromptForNumber(
+                $"How many DIGITS should operand {operandNumber} have: ");
+        }
+        int operations = PromptForNumber("\nSelect the number of operations to perform: ");
+        Console.WriteLine();
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+        for (int i = 0; i < operations; i++)
+        {
+            int[] operandValues = new int[operands];
+            for (int j = 0; j < operands; j++)
+            {
+                int digits = digitsPerOperand[j];
+                operandValues[j] = GetRandomBinaryWithNDigits(digits);
+            }
             Stopwatch stopwatchOp = new Stopwatch();
             stopwatchOp.Start();
-            int userAnswer = PromptForNumber($"Convert {decimalValue} to binary: ");
+            int userAnswer = PromptForNumber(PromptOperation("addition", operandValues));
+            int result = AddBinaries(operandValues);
             stopwatchOp.Stop();
-            if (userAnswer == binaryValue) correctAnswers++;
+            if (userAnswer == result) correctAnswers++;
             Console.WriteLine(ReportQuestionResult(
                 userAnswer,
-                binaryValue,
+                result,
                 stopwatchOp.Elapsed.Seconds,
                 stopwatchOp.Elapsed.Minutes));
         }
+
         stopwatch.Stop();
         Console.WriteLine(ReportTotalScore(
             correctAnswers,
-            conversions,
-            stopwatch.Elapsed.Seconds,
-            stopwatch.Elapsed.Minutes));
-    }
-    else if (binaryMode == "2" || binaryMode == "binary to decimal")
-    {
-        int correctAnswers = 0;
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-        for (int i = 0; i < conversions; i++)
-        {
-            int decimalValue = decimals[i];
-            int binaryValue = binaries[i];
-            Stopwatch stopwatchOp = new Stopwatch();
-            stopwatchOp.Start();
-            int userAnswer = PromptForNumber($"Convert {binaryValue} to decimal: ");
-            stopwatchOp.Stop();
-            if (userAnswer == decimalValue) correctAnswers++;
-            Console.WriteLine(ReportQuestionResult(
-                userAnswer,
-                decimalValue,
-                stopwatchOp.Elapsed.Seconds,
-                stopwatchOp.Elapsed.Minutes));
-        }
-        stopwatch.Stop();
-        Console.WriteLine(ReportTotalScore(
-            correctAnswers,
-            conversions,
+            operations,
             stopwatch.Elapsed.Seconds,
             stopwatch.Elapsed.Minutes));
     }
