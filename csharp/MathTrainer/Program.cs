@@ -1,5 +1,4 @@
-﻿// TODO - [x] subtract binary
-// TODO - [ ] multiply binary
+﻿// TODO - [ ] multiply binary
 // TODO - [ ] divide binary
 // TODO - [ ] determine value of binary with 1 in each place
 // TODO - [ ] determine how many 1s would be enough to represent n number
@@ -8,6 +7,8 @@
 // TODO - [ ] do hexadecimal conversions/operations
 
 // TODO - [ ] integrate pre-calculus topics
+// TODO - [ ] integrate calculus tops
+// TODO - [ ] integrate discrete maths topics
 
 // TODO - [ ] select custom ranges (either quantity or digits)
 // TODO - [ ] improve precision in time tracking
@@ -15,6 +16,7 @@
 // TODO - [ ] format operations
 // TODO - [ ] do unit tests
 // TODO - [ ] handle exceptions
+// TODO - [ ] format and explain answers
 
 using System.Diagnostics;
 using System.Text;
@@ -208,18 +210,6 @@ static int BinaryToDecimal(int binaryValue)
     return result;
 }
 
-static int AddBinaries(int[] binaryOperands)
-{
-    int[] decimalOperands = new int[binaryOperands.Length];
-    for (int i = 0; i < binaryOperands.Length; i++)
-    {
-        decimalOperands[i] = BinaryToDecimal(binaryOperands[i]);
-    }
-    int decimalResult = SolveOperation("addition", decimalOperands);
-    int binaryResult = DecimalToBinary(decimalResult);
-    return binaryResult;
-}
-
 static int[] GetNBinariesToSubtract(int n, int maxDigits)
 {
     Random rnd = new Random();
@@ -236,14 +226,14 @@ static int[] GetNBinariesToSubtract(int n, int maxDigits)
     return binaries;
 }
 
-static int SubtractBinaries(int[] binaryOperands)
+static int SolveBinaryOperation(string operation, int[] binaryOperands)
 {
     int[] decimalOperands = new int[binaryOperands.Length];
-    for (int i = 0; i < binaryOperands.Length; i++)
+    for (int i = 0; i < decimalOperands.Length; i++)
     {
         decimalOperands[i] = BinaryToDecimal(binaryOperands[i]);
     }
-    int decimalResult = SolveOperation("subtraction", decimalOperands);
+    int decimalResult = SolveOperation(operation, decimalOperands);
     int binaryResult = DecimalToBinary(decimalResult);
     return binaryResult;
 }
@@ -417,7 +407,7 @@ else if (mode == "2" || mode == "binary")
             Stopwatch stopwatchOp = new Stopwatch();
             stopwatchOp.Start();
             int userAnswer = PromptForNumber(PromptOperation("addition", operandValues));
-            int result = AddBinaries(operandValues);
+            int result = SolveBinaryOperation("addition", operandValues);
             stopwatchOp.Stop();
             if (userAnswer == result) correctAnswers++;
             Console.WriteLine(ReportQuestionResult(
@@ -451,7 +441,7 @@ else if (mode == "2" || mode == "binary")
             Stopwatch stopwatchOp = new Stopwatch();
             stopwatchOp.Start();
             int userAnswer = PromptForNumber(PromptOperation("subtraction", operandValues));
-            int result = SubtractBinaries(operandValues);
+            int result = SolveBinaryOperation("subtraction", operandValues);
             stopwatchOp.Stop();
             if (userAnswer == result) correctAnswers++;
             Console.WriteLine(ReportQuestionResult(
