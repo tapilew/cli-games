@@ -1,4 +1,4 @@
-﻿// TODO - [ ] multiply binary
+﻿// TODO - [x] multiply binary
 // TODO - [ ] divide binary
 // TODO - [ ] determine value of binary with 1 in each place
 // TODO - [ ] determine how many 1s would be enough to represent n number
@@ -99,7 +99,8 @@ static string WelcomeMessage(string state)
                 "Select your operation type: ";
         case "binary":
             return "\n1) decimal to binary\n2) binary to decimal\n" +
-                "3) binary addition\n4) binary subtraction\nChoose: ";
+                "3) binary addition\n4) binary subtraction\n" +
+                "5) binary multiplication\nChoose: ";
         default:
             return "nope...";
     }
@@ -442,6 +443,49 @@ else if (mode == "2" || mode == "binary")
             stopwatchOp.Start();
             int userAnswer = PromptForNumber(PromptOperation("subtraction", operandValues));
             int result = SolveBinaryOperation("subtraction", operandValues);
+            stopwatchOp.Stop();
+            if (userAnswer == result) correctAnswers++;
+            Console.WriteLine(ReportQuestionResult(
+                userAnswer,
+                result,
+                stopwatchOp.Elapsed.Seconds,
+                stopwatchOp.Elapsed.Minutes));
+        }
+        stopwatch.Stop();
+        Console.WriteLine(ReportTotalScore(
+            correctAnswers,
+            operations,
+            stopwatch.Elapsed.Seconds,
+            stopwatch.Elapsed.Minutes));
+    }
+    else if (binaryMode == "5" || binaryMode == "binary multiplication" || binaryMode == "mlp")
+    {
+        int correctAnswers = 0;
+        int operands = PromptForNumber($"\nGreat! Let's do binary multiplication\n" +
+            "Select the amount of OPERANDS of each multiplication: ");
+        int[] digitsPerOperand = new int[operands];
+        for (int i = 0; i < operands; i++)
+        {
+            int operandNumber = i + 1;
+            digitsPerOperand[i] = PromptForNumber(
+                $"How many DIGITS should operand {operandNumber} have: ");
+        }
+        int operations = PromptForNumber("\nSelect the number of operations to perform: ");
+        Console.WriteLine();
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+        for (int i = 0; i < operations; i++)
+        {
+            int[] operandValues = new int[operands];
+            for (int j = 0; j < operands; j++)
+            {
+                int digits = digitsPerOperand[j];
+                operandValues[j] = GetRandomBinaryWithNDigits(digits);
+            }
+            Stopwatch stopwatchOp = new Stopwatch();
+            stopwatchOp.Start();
+            int userAnswer = PromptForNumber(PromptOperation("multiplication", operandValues));
+            int result = SolveBinaryOperation("multiplication", operandValues);
             stopwatchOp.Stop();
             if (userAnswer == result) correctAnswers++;
             Console.WriteLine(ReportQuestionResult(
