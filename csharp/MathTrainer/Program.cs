@@ -1,5 +1,4 @@
-﻿// TODO - [ ] divide binary
-// TODO - [ ] determine value of binary with 1 in each place
+﻿// TODO - [ ] determine value of binary with 1 in each place
 // TODO - [ ] determine how many 1s would be enough to represent n number
 
 // TODO - [ ] do octal conversions/operations
@@ -75,11 +74,26 @@ static string IdentifyOperationType(string operation)
 static string ReportTotalScore(
     int correctAnswers,
     int totalQuestions,
-    int totalSeconds,
-    int totalMinutes)
+    int seconds,
+    int minutes)
 {
+    int totalSeconds = minutes * 60 + seconds;
     return ($"Goodbye! your score was {correctAnswers}/{totalQuestions}\n") +
-        ($"Total time: {totalSeconds} seconds ({totalMinutes} minutes)");
+        ($"Total time: {totalSeconds} seconds ({minutes} minutes)");
+}
+
+static string ReportQuestionResult(
+    int userAnswer,
+    int correctAnswer,
+    int seconds,
+    int minutes)
+{
+    string message = "";
+    bool answeredRight = userAnswer == correctAnswer;
+    int totalSeconds = minutes * 60 + seconds;
+    message += answeredRight ? "That's correct!" : $"Nope... it was {correctAnswer}";
+    message += $"\nYou answered in {totalSeconds} seconds ({minutes} minutes).\n";
+    return message;
 }
 
 static string WelcomeMessage(string state)
@@ -106,18 +120,6 @@ static string WelcomeMessage(string state)
     }
 }
 
-static string ReportQuestionResult(
-    int userAnswer,
-    int correctAnswer,
-    int seconds,
-    int minutes)
-{
-    string message = "";
-    bool answeredRight = userAnswer == correctAnswer;
-    message += answeredRight ? "That's correct!" : $"Nope... it was {correctAnswer}";
-    message += $"\nYou answered in {seconds} seconds ({minutes} minutes).\n";
-    return message;
-}
 
 static int SolveOperation(string operationType, int[] operands)
 {
