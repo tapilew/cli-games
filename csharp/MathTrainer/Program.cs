@@ -3,6 +3,7 @@
 
 // TODO - [ ] do octal conversions/operations
 // TODO - [ ] do hexadecimal conversions/operations
+// TODO - [ ] do truth tables & propositional logic
 
 // TODO - [ ] integrate pre-calculus topics
 // TODO - [ ] integrate calculus tops
@@ -22,6 +23,7 @@ System.Random random = new System.Random();
 
 static int DecimalToBinary(int decimalValue)
 {
+    if (decimalValue == 0) return 0;
     string binaryText = "";
     int quotient = decimalValue;
     while (quotient > 1)
@@ -310,7 +312,8 @@ else if (mode == "2" || mode == "binary")
 {
     var binaryMode = PromptForString(WelcomeMessage("binary"));
 
-    if (binaryMode == "1" || binaryMode == "decimal to binary" || binaryMode == "2" || binaryMode == "binary to decimal")
+    if (binaryMode == "1" || binaryMode == "decimal to binary" ||
+        binaryMode == "2" || binaryMode == "binary to decimal")
     {
         int minimum = PromptForNumber(
             "Write a range of numbers to convert from or to\n" +
