@@ -257,6 +257,15 @@ static int GetRandomBinaryWithNDigits(int digits)
     return binaryValue;
 }
 
+static int GetRandomIntWithNDigits(int digits)
+{
+    Random random = new Random();
+    int max = GetMaximumNumberWithNDigits(digits);
+    int min = GetMinimumNumberWithNDigits(digits);
+    return random.Next(min, max);
+
+}
+
 static int[] AskDigitsPerOperand(int operandsQuantity)
 {
     int[] digitsPerOperand = new int[operandsQuantity];
@@ -267,6 +276,25 @@ static int[] AskDigitsPerOperand(int operandsQuantity)
             $"How many DIGITS should operand {operandNumber} have: ");
     }
     return digitsPerOperand;
+}
+
+static int[] GetOperandValuesWithNDigits(string numberSystem, int[] digitsPerOperand)
+{
+    int[] operandValues = new int[digitsPerOperand.Length];
+    for (int i = 0; i < digitsPerOperand.Length; i++)
+    {
+        int digits = digitsPerOperand[i];
+        switch (numberSystem)
+        {
+            case "decimal":
+                operandValues[i] = GetRandomIntWithNDigits(digits);
+                break;
+            case "binary":
+                operandValues[i] = GetRandomBinaryWithNDigits(digits);
+                break;
+        }
+    }
+    return operandValues;
 }
 
 var mode = PromptForString(WelcomeMessage("home"));
@@ -285,14 +313,7 @@ if (mode == "1" || mode == "arithmetic")
     stopwatch.Start();
     for (int i = 0; i < operations; i++)
     {
-        int[] operandValues = new int[operands];
-        for (int j = 0; j < operands; j++)
-        {
-            int minimum = GetMinimumNumberWithNDigits(digitsPerOperand[j]);
-            int maximum = GetMaximumNumberWithNDigits(digitsPerOperand[j]);
-            int value = random.Next(minimum, maximum);
-            operandValues[j] = value;
-        }
+        int[] operandValues = GetOperandValuesWithNDigits("decimal", digitsPerOperand);
         Stopwatch stopwatchOp = new Stopwatch();
         stopwatchOp.Start();
         int userAnswer = PromptForNumber(PromptOperation(operationType, operandValues));
@@ -403,12 +424,7 @@ else if (mode == "2" || mode == "binary")
         stopwatch.Start();
         for (int i = 0; i < operations; i++)
         {
-            int[] operandValues = new int[operands];
-            for (int j = 0; j < operands; j++)
-            {
-                int digits = digitsPerOperand[j];
-                operandValues[j] = GetRandomBinaryWithNDigits(digits);
-            }
+            int[] operandValues = GetOperandValuesWithNDigits("binary", digitsPerOperand);
             Stopwatch stopwatchOp = new Stopwatch();
             stopwatchOp.Start();
             int userAnswer = PromptForNumber(PromptOperation("addition", operandValues));
@@ -474,12 +490,7 @@ else if (mode == "2" || mode == "binary")
         stopwatch.Start();
         for (int i = 0; i < operations; i++)
         {
-            int[] operandValues = new int[operands];
-            for (int j = 0; j < operands; j++)
-            {
-                int digits = digitsPerOperand[j];
-                operandValues[j] = GetRandomBinaryWithNDigits(digits);
-            }
+            int[] operandValues = GetOperandValuesWithNDigits("binary", digitsPerOperand);
             Stopwatch stopwatchOp = new Stopwatch();
             stopwatchOp.Start();
             int userAnswer = PromptForNumber(PromptOperation("multiplication", operandValues));
@@ -511,12 +522,7 @@ else if (mode == "2" || mode == "binary")
         stopwatch.Start();
         for (int i = 0; i < operations; i++)
         {
-            int[] operandValues = new int[operands];
-            for (int j = 0; j < operands; j++)
-            {
-                int digits = digitsPerOperand[j];
-                operandValues[j] = GetRandomBinaryWithNDigits(digits);
-            }
+            int[] operandValues = GetOperandValuesWithNDigits("binary", digitsPerOperand);
             Stopwatch stopwatchOp = new Stopwatch();
             stopwatchOp.Start();
             int userAnswer = PromptForNumber(PromptOperation("division", operandValues));
