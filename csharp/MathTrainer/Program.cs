@@ -122,7 +122,6 @@ static string WelcomeMessage(string state)
     }
 }
 
-
 static int SolveOperation(string operationType, int[] operands)
 {
     int result = operands[0];
@@ -258,6 +257,18 @@ static int GetRandomBinaryWithNDigits(int digits)
     return binaryValue;
 }
 
+static int[] AskDigitsPerOperand(int operandsQuantity)
+{
+    int[] digitsPerOperand = new int[operandsQuantity];
+    for (int i = 0; i < operandsQuantity; i++)
+    {
+        int operandNumber = i + 1;
+        digitsPerOperand[i] = PromptForNumber(
+            $"How many DIGITS should operand {operandNumber} have: ");
+    }
+    return digitsPerOperand;
+}
+
 var mode = PromptForString(WelcomeMessage("home"));
 
 if (mode == "1" || mode == "arithmetic")
@@ -267,13 +278,7 @@ if (mode == "1" || mode == "arithmetic")
     operationType = IdentifyOperationType(operationType);
     int operands = PromptForNumber($"\nGreat! Let's do {operationType}\n" +
         "Select the amount of OPERANDS of each operation: ");
-    int[] digitsPerOperand = new int[operands];
-    for (int i = 0; i < operands; i++)
-    {
-        int operandNumber = i + 1;
-        digitsPerOperand[i] = PromptForNumber(
-            $"How many DIGITS should operand {operandNumber} have: ");
-    }
+    int[] digitsPerOperand = AskDigitsPerOperand(operands);
     int operations = PromptForNumber("\nSelect the number of operations to perform: ");
     Console.WriteLine();
     Stopwatch stopwatch = new Stopwatch();
@@ -391,13 +396,7 @@ else if (mode == "2" || mode == "binary")
         int correctAnswers = 0;
         int operands = PromptForNumber($"\nGreat! Let's do binary addition\n" +
             "Select the amount of OPERANDS of each addition: ");
-        int[] digitsPerOperand = new int[operands];
-        for (int i = 0; i < operands; i++)
-        {
-            int operandNumber = i + 1;
-            digitsPerOperand[i] = PromptForNumber(
-                $"How many DIGITS should operand {operandNumber} have: ");
-        }
+        int[] digitsPerOperand = AskDigitsPerOperand(operands);
         int operations = PromptForNumber("\nSelect the number of operations to perform: ");
         Console.WriteLine();
         Stopwatch stopwatch = new Stopwatch();
@@ -468,13 +467,7 @@ else if (mode == "2" || mode == "binary")
         int correctAnswers = 0;
         int operands = PromptForNumber($"\nGreat! Let's do binary multiplication\n" +
             "Select the amount of OPERANDS of each multiplication: ");
-        int[] digitsPerOperand = new int[operands];
-        for (int i = 0; i < operands; i++)
-        {
-            int operandNumber = i + 1;
-            digitsPerOperand[i] = PromptForNumber(
-                $"How many DIGITS should operand {operandNumber} have: ");
-        }
+        int[] digitsPerOperand = AskDigitsPerOperand(operands);
         int operations = PromptForNumber("\nSelect the number of operations to perform: ");
         Console.WriteLine();
         Stopwatch stopwatch = new Stopwatch();
@@ -511,13 +504,7 @@ else if (mode == "2" || mode == "binary")
         int correctAnswers = 0;
         int operands = PromptForNumber($"\nGreat! Let's do binary division\n" +
             "Select the amount of OPERANDS of each division: ");
-        int[] digitsPerOperand = new int[operands];
-        for (int i = 0; i < operands; i++)
-        {
-            int operandNumber = i + 1;
-            digitsPerOperand[i] = PromptForNumber(
-                $"How many DIGITS should operand {operandNumber} have: ");
-        }
+        int[] digitsPerOperand = AskDigitsPerOperand(operands);
         int operations = PromptForNumber("\nSelect the number of operations to perform: ");
         Console.WriteLine();
         Stopwatch stopwatch = new Stopwatch();
