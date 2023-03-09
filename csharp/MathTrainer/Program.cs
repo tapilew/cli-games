@@ -186,10 +186,10 @@ static int PromptForNumber(string prompt)
     return answer;
 }
 
-static string PromptForString(string prompt)
+static string? PromptForString(string prompt)
 {
     Console.Write(prompt);
-    string answer = Console.ReadLine();
+    string? answer = Console.ReadLine();
     return answer;
 }
 
@@ -356,11 +356,36 @@ static bool PromptAndGetConversionResult(
     return userAnswer == result;
 }
 
+static string PromptOperationsNTimesAndGetReport(
+    string numberSystem,
+    string operationType,
+    int[] digitsPerOperand,
+    int timesToRepeat
+)
+{
+    int correctAnswers = 0;
+    Stopwatch stopwatch = new Stopwatch();
+    stopwatch.Start();
+    for (int i = 0; i < timesToRepeat; i++)
+    {
+        int[] operandValues = GetOperandValuesWithNDigits(numberSystem, digitsPerOperand);
+        if (PromptAndGetOperationResult(numberSystem, operationType, operandValues))
+        {
+            correctAnswers++;
+        }
+    }
+    stopwatch.Stop();
+    return ReportTotalScore(
+        correctAnswers,
+        timesToRepeat,
+        stopwatch.Elapsed.Seconds,
+        stopwatch.Elapsed.Minutes);
+}
+
 var mode = PromptForString(WelcomeMessage("home"));
 
 if (mode == "1" || mode == "arithmetic")
 {
-    int correctAnswers = 0;
     var operationType = PromptForString(WelcomeMessage("arithmetic"));
     operationType = IdentifyOperationType(operationType);
     int operands = PromptForNumber($"\nGreat! Let's do {operationType}\n" +
@@ -368,23 +393,11 @@ if (mode == "1" || mode == "arithmetic")
     int[] digitsPerOperand = AskDigitsPerOperand(operands);
     int operations = PromptForNumber("\nSelect the number of operations to perform: ");
     Console.WriteLine();
-    Stopwatch stopwatch = new Stopwatch();
-    stopwatch.Start();
-    for (int i = 0; i < operations; i++)
-    {
-        int[] operandValues = GetOperandValuesWithNDigits("decimal", digitsPerOperand);
-        if (PromptAndGetOperationResult("decimal", operationType, operandValues))
-        {
-            correctAnswers++;
-        }
-    }
-
-    stopwatch.Stop();
-    Console.WriteLine(ReportTotalScore(
-        correctAnswers,
-        operations,
-        stopwatch.Elapsed.Seconds,
-        stopwatch.Elapsed.Minutes));
+    Console.WriteLine(PromptOperationsNTimesAndGetReport(
+        "decimal",
+        operationType,
+        digitsPerOperand,
+        operations));
 }
 else if (mode == "2" || mode == "binary")
 {
@@ -450,28 +463,17 @@ else if (mode == "2" || mode == "binary")
     }
     else if (binaryMode == "3" || binaryMode == "binary addition" || binaryMode == "add")
     {
-        int correctAnswers = 0;
         int operands = PromptForNumber($"\nGreat! Let's do binary addition\n" +
             "Select the amount of OPERANDS of each addition: ");
         int[] digitsPerOperand = AskDigitsPerOperand(operands);
         int operations = PromptForNumber("\nSelect the number of operations to perform: ");
         Console.WriteLine();
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-        for (int i = 0; i < operations; i++)
-        {
-            int[] operandValues = GetOperandValuesWithNDigits("binary", digitsPerOperand);
-            if (PromptAndGetOperationResult("binary", "addition", operandValues))
-            {
-                correctAnswers++;
-            }
-        }
-        stopwatch.Stop();
-        Console.WriteLine(ReportTotalScore(
-            correctAnswers,
-            operations,
-            stopwatch.Elapsed.Seconds,
-            stopwatch.Elapsed.Minutes));
+        Console.WriteLine(PromptOperationsNTimesAndGetReport(
+            "binary",
+            "addition",
+            digitsPerOperand,
+            operations
+        ));
     }
     else if (binaryMode == "4" || binaryMode == "binary subtraction" || binaryMode == "sub")
     {
@@ -501,53 +503,31 @@ else if (mode == "2" || mode == "binary")
     }
     else if (binaryMode == "5" || binaryMode == "binary multiplication" || binaryMode == "mlp")
     {
-        int correctAnswers = 0;
         int operands = PromptForNumber($"\nGreat! Let's do binary multiplication\n" +
             "Select the amount of OPERANDS of each multiplication: ");
         int[] digitsPerOperand = AskDigitsPerOperand(operands);
         int operations = PromptForNumber("\nSelect the number of operations to perform: ");
         Console.WriteLine();
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-        for (int i = 0; i < operations; i++)
-        {
-            int[] operandValues = GetOperandValuesWithNDigits("binary", digitsPerOperand);
-            if (PromptAndGetOperationResult("binary", "multiplication", operandValues))
-            {
-                correctAnswers++;
-            }
-        }
-        stopwatch.Stop();
-        Console.WriteLine(ReportTotalScore(
-            correctAnswers,
-            operations,
-            stopwatch.Elapsed.Seconds,
-            stopwatch.Elapsed.Minutes));
+        Console.WriteLine(PromptOperationsNTimesAndGetReport(
+            "binary",
+            "multiplication",
+            digitsPerOperand,
+            operations
+        ));
     }
     else if (binaryMode == "6" || binaryMode == "division" || binaryMode == "div")
     {
-        int correctAnswers = 0;
         int operands = PromptForNumber($"\nGreat! Let's do binary division\n" +
             "Select the amount of OPERANDS of each division: ");
         int[] digitsPerOperand = AskDigitsPerOperand(operands);
         int operations = PromptForNumber("\nSelect the number of operations to perform: ");
         Console.WriteLine();
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-        for (int i = 0; i < operations; i++)
-        {
-            int[] operandValues = GetOperandValuesWithNDigits("binary", digitsPerOperand);
-            if (PromptAndGetOperationResult("binary", "division", operandValues))
-            {
-                correctAnswers++;
-            }
-        }
-        stopwatch.Stop();
-        Console.WriteLine(ReportTotalScore(
-            correctAnswers,
-            operations,
-            stopwatch.Elapsed.Seconds,
-            stopwatch.Elapsed.Minutes));
+        Console.WriteLine(PromptOperationsNTimesAndGetReport(
+            "binary",
+            "division",
+            digitsPerOperand,
+            operations
+        ));
     }
     else
     {
