@@ -329,6 +329,33 @@ static bool PromptAndGetOperationResult(
     return userAnswer == result;
 }
 
+static bool PromptAndGetConversionResult(
+    string convertFrom,
+    string convertTo,
+    int valueToConvert
+)
+{
+    Stopwatch stopwatchOp = new Stopwatch();
+    stopwatchOp.Start();
+    int userAnswer = PromptForNumber($"Convert {convertFrom} {valueToConvert} to {convertTo}: ");
+    stopwatchOp.Stop();
+    int result = 0;
+    if (convertFrom == "decimal" && convertTo == "binary")
+    {
+        result = DecimalToBinary(valueToConvert);
+    }
+    else if (convertFrom == "binary" && convertTo == "decimal")
+    {
+        result = BinaryToDecimal(valueToConvert);
+    }
+    Console.WriteLine(ReportQuestionResult(
+        userAnswer,
+        result,
+        stopwatchOp.Elapsed.Seconds,
+        stopwatchOp.Elapsed.Minutes));
+    return userAnswer == result;
+}
+
 var mode = PromptForString(WelcomeMessage("home"));
 
 if (mode == "1" || mode == "arithmetic")
@@ -389,18 +416,10 @@ else if (mode == "2" || mode == "binary")
             stopwatch.Start();
             for (int i = 0; i < conversions; i++)
             {
-                int decimalValue = decimals[i];
-                int binaryValue = binaries[i];
-                Stopwatch stopwatchOp = new Stopwatch();
-                stopwatchOp.Start();
-                int userAnswer = PromptForNumber($"Convert {decimalValue} to binary: ");
-                stopwatchOp.Stop();
-                if (userAnswer == binaryValue) correctAnswers++;
-                Console.WriteLine(ReportQuestionResult(
-                    userAnswer,
-                    binaryValue,
-                    stopwatchOp.Elapsed.Seconds,
-                    stopwatchOp.Elapsed.Minutes));
+                if (PromptAndGetConversionResult("decimal", "binary", decimals[i]))
+                {
+                    correctAnswers++;
+                }
             }
             stopwatch.Stop();
             Console.WriteLine(ReportTotalScore(
@@ -416,18 +435,10 @@ else if (mode == "2" || mode == "binary")
             stopwatch.Start();
             for (int i = 0; i < conversions; i++)
             {
-                int decimalValue = decimals[i];
-                int binaryValue = binaries[i];
-                Stopwatch stopwatchOp = new Stopwatch();
-                stopwatchOp.Start();
-                int userAnswer = PromptForNumber($"Convert {binaryValue} to decimal: ");
-                stopwatchOp.Stop();
-                if (userAnswer == decimalValue) correctAnswers++;
-                Console.WriteLine(ReportQuestionResult(
-                    userAnswer,
-                    decimalValue,
-                    stopwatchOp.Elapsed.Seconds,
-                    stopwatchOp.Elapsed.Minutes));
+                if (PromptAndGetConversionResult("binary", "decimal", binaries[i]))
+                {
+                    correctAnswers++;
+                }
             }
             stopwatch.Stop();
             Console.WriteLine(ReportTotalScore(
