@@ -407,6 +407,30 @@ static string PromptConversionsNTimesAndGetReport(
         stopwatch.Elapsed.Minutes);
 }
 
+static int[] GetDecimalsInARange(int decimalMin, int decimalMax, int arrayLength)
+{
+    Random random = new Random();
+    int[] decimals = new int[arrayLength];
+    for (int i = 0; i < decimals.Length; i++)
+    {
+        int decimalValue = random.Next(decimalMin, decimalMax + 1);
+        decimals[i] = decimalValue;
+    }
+    return decimals;
+}
+
+static int[] GetBinariesInARange(int decimalMin, int decimalMax, int arrayLength)
+{
+    Random random = new Random();
+    int[] decimals = GetDecimalsInARange(decimalMin, decimalMax, arrayLength);
+    int[] binaries = new int[arrayLength];
+    for (int i = 0; i < binaries.Length; i++)
+    {
+        binaries[i] = DecimalToBinary(decimals[i]);
+    }
+    return binaries;
+}
+
 var mode = PromptForString(WelcomeMessage("home"));
 
 if (mode == "1" || mode == "arithmetic")
@@ -427,6 +451,7 @@ if (mode == "1" || mode == "arithmetic")
 else if (mode == "2" || mode == "binary")
 {
     var binaryMode = PromptForString(WelcomeMessage("binary"));
+    Console.WriteLine();
 
     if (binaryMode == "1" || binaryMode == "decimal to binary" ||
         binaryMode == "2" || binaryMode == "binary to decimal")
@@ -437,15 +462,8 @@ else if (mode == "2" || mode == "binary")
         int maximum = PromptForNumber("Maximum: ");
         int conversions = PromptForNumber("How many times you want to convert?: ");
         Console.WriteLine();
-        int[] decimals = new int[conversions];
-        int[] binaries = new int[conversions];
-
-        for (int i = 0; i < conversions; i++)
-        {
-            int decimalValue = random.Next(minimum, maximum + 1);
-            decimals[i] = decimalValue;
-            binaries[i] = DecimalToBinary(decimalValue);
-        }
+        int[] decimals = GetDecimalsInARange(minimum, maximum, conversions);
+        int[] binaries = GetBinariesInARange(minimum, maximum, conversions);
 
         if (binaryMode == "1" || binaryMode == "decimal to binary")
         {
