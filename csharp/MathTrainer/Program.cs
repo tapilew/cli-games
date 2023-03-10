@@ -382,6 +382,31 @@ static string PromptOperationsNTimesAndGetReport(
         stopwatch.Elapsed.Minutes);
 }
 
+static string PromptConversionsNTimesAndGetReport(
+    string convertFrom,
+    string convertTo,
+    int[] valuesToConvert,
+    int timesToRepeat
+)
+{
+    int correctAnswers = 0;
+    Stopwatch stopwatch = new Stopwatch();
+    stopwatch.Start();
+    for (int i = 0; i < timesToRepeat; i++)
+    {
+        if (PromptAndGetConversionResult(convertFrom, convertTo, valuesToConvert[i]))
+        {
+            correctAnswers++;
+        }
+    }
+    stopwatch.Stop();
+    return ReportTotalScore(
+        correctAnswers,
+        timesToRepeat,
+        stopwatch.Elapsed.Seconds,
+        stopwatch.Elapsed.Minutes);
+}
+
 var mode = PromptForString(WelcomeMessage("home"));
 
 if (mode == "1" || mode == "arithmetic")
@@ -424,41 +449,21 @@ else if (mode == "2" || mode == "binary")
 
         if (binaryMode == "1" || binaryMode == "decimal to binary")
         {
-            int correctAnswers = 0;
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            for (int i = 0; i < conversions; i++)
-            {
-                if (PromptAndGetConversionResult("decimal", "binary", decimals[i]))
-                {
-                    correctAnswers++;
-                }
-            }
-            stopwatch.Stop();
-            Console.WriteLine(ReportTotalScore(
-                correctAnswers,
-                conversions,
-                stopwatch.Elapsed.Seconds,
-                stopwatch.Elapsed.Minutes));
+            Console.WriteLine(PromptConversionsNTimesAndGetReport(
+                "decimal",
+                "binary",
+                decimals,
+                conversions
+            ));
         }
         else if (binaryMode == "2" || binaryMode == "binary to decimal")
         {
-            int correctAnswers = 0;
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            for (int i = 0; i < conversions; i++)
-            {
-                if (PromptAndGetConversionResult("binary", "decimal", binaries[i]))
-                {
-                    correctAnswers++;
-                }
-            }
-            stopwatch.Stop();
-            Console.WriteLine(ReportTotalScore(
-                correctAnswers,
-                conversions,
-                stopwatch.Elapsed.Seconds,
-                stopwatch.Elapsed.Minutes));
+            Console.WriteLine(PromptConversionsNTimesAndGetReport(
+                "binary",
+                "decimal",
+                binaries,
+                conversions
+            ));
         }
     }
     else if (binaryMode == "3" || binaryMode == "binary addition" || binaryMode == "add")
