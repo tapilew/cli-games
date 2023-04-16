@@ -43,3 +43,16 @@ int main()
 //      - pointers that goes to the direction in memory of an object
 //        but doesn't care its data type
 //        # C can access memory
+
+// derived types
+// - pointer
+// - array
+// - function
+// - reference
+
+// user defined types
+// - class
+// - structure
+// - union
+// - enum
+// - typedef
