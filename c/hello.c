@@ -35,3 +35,11 @@ int main()
 //      - optimize memory
 //      - prevent errors and memory leaks
 // - know how your compiler handle its data types size
+
+// void - no available value
+//      used in
+//      - function returns void
+//      - function with void arguments
+//      - pointers that goes to the direction in memory of an object
+//        but doesn't care its data type
+//        # C can access memory
