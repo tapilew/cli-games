@@ -5,6 +5,8 @@
 extern int externalNum = 12;
 
 int one, two, three;
+int hi, there, you;
+
 int minimumMinutes = 30;
 
 float foo, bar, wow;
@@ -14,16 +16,44 @@ unsigned char dailyWorkedHours = 0;
 
 int main()
 {
+    // variable definition
+    int previousExternalNum = externalNum;
+    int externalNum;
+    printf("Notice that the value of externalNum has changed from %d to %d\n",
+        previousExternalNum, externalNum);
+
     // variable initialization
     one = 1;
     two = 2;
     three = one + two;
 
+    hi = 1;
+    there = 2147483647;
+    you = hi + there; // max int value exceeded
+    printf("you = %d, here the maximum int value exceeded by %d\n", you, hi);
+
+    there = -2147483648;
+    you = there - hi; // min int value exceeded
+    printf("you = %d, here the minimum int value exceeded by %d\n", you, hi);
+
+    foo = -1000000;
+    bar = -2147483647;
+    wow = foo + bar; // decimal places are added
+    printf("the value of wow is: %f\n", wow);
+
+    foo = 1000.99999999999;
+    bar = 1.1111;
+    wow = foo + bar; // decimal precision is limited by type
+    printf("the value of wow is: %f\n", wow);
+    printf("these numbers are %d and %d because they haven't been assigned a value\n");
+
+    // imprecisions won't trigger a compiler error but can affect the program logic
+
     /* First hello world
     in C language
     */
     printf("hello world\n");
-    printf("Value of sum is: %d\nanother interesting number is %d\n", three, 47);
+    printf("the value of sum is: %d\nanother interesting number is %d\n", three, 47);
     return 0;
 }
 
