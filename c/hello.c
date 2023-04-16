@@ -1,10 +1,29 @@
 #include<stdio.h>
+
+// variable declarations
+
+extern int externalNum = 12;
+
+int one, two, three;
+int minimumMinutes = 30;
+
+float foo, bar, wow;
+
+char y = 'y';
+unsigned char dailyWorkedHours = 0;
+
 int main()
 {
+    // variable initialization
+    one = 1;
+    two = 2;
+    three = one + two;
+
     /* First hello world
     in C language
     */
     printf("hello world\n");
+    printf("Value of sum is: %d\nanother interesting number is %d\n", three, 47);
     return 0;
 }
 
