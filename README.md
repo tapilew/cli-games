@@ -6,10 +6,13 @@ This repository contains an array of CLI-based games written in different progra
 
 ## Programming languages
 
-- [C#](#c)
+- [C](#c)
+- [C#](#c-sharp)
 - [Python](#python)
 
-### C#
+### C
+
+### C Sharp
 
 ### Python
 
