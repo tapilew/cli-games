@@ -8,11 +8,14 @@ This repository contains an array of CLI-based games written in different progra
 
 - [C](#c)
 - [C#](#c-sharp)
+- [Java](#java) 
 - [Python](#python)
 
 ### C
 
 ### C Sharp
+
+### Java
 
 ### Python
 
